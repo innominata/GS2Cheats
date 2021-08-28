@@ -1,0 +1,6 @@
+.vs/
+.idea/
+obj/
+.git/
+bin/
+*.dll

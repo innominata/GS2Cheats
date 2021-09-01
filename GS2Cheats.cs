@@ -102,9 +102,9 @@ namespace GalacticScaleCheats
             options.Add(GSUI.Group("Mecha".Translate(), playerOptions, "Settings which affect Icarus".Translate()));
             
             var researchOptions = new GSOptions();
-            researchOptions.Add(GSUI.Checkbox("Unlock All".Translate(), false, "unlockAll", null, "Research everything instantly".Translate()));
+            researchOptions.Add(GSUI.Checkbox("Unlock All".Translate(), false, "unlockAll", (o) => {if (o && GameMain.isPaused && !GS2.IsMenuDemo) UnlockTech();}, "Research everything instantly".Translate()));
             researchOptions.Add(GSUI.Checkbox("Free Research".Translate(), false, "freeResearch", null, "Unlock research when clicked".Translate()));
-            researchOptions.Add(GSUI.Slider("Research Speed Multiplier".Translate(), 0.1f, 1f, 100f, "labSpeed", null, "Speed labs consume matrices".Translate()));
+            researchOptions.Add(GSUI.Slider("Research Speed Multiplier".Translate(), 0.1f, 1f, 20f, 0.1f, "labSpeed", null, "Speed labs consume matrices".Translate()));
             options.Add(GSUI.Group("Research".Translate(), researchOptions, "Settings which affect research".Translate()));
 
             var craftOptions = new GSOptions();

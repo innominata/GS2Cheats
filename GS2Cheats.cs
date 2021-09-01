@@ -46,6 +46,18 @@ namespace GalacticScaleCheats
         public string GUID => "space.customizing.generators.cheats";
         public GSOptions Options => options; // Likewise for options
 
+        public bool Enabled
+        {
+            get
+            {
+                return active;
+            }
+            set
+            {
+                active = value;
+            }
+        }
+        static bool active = true;
         public void Init()
         {
             GS2.Log("Initializing GS2 Cheats"); // Use Galactic Scales Log system for debugging purposes.
@@ -74,6 +86,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(UIRecipeEntry), "SetRecipe")]
         public static void SetRecipe2(ref UIRecipeEntry __instance, RecipeProto recipe)
         {
+            if (!active) return;
             GS2.WarnJson(instance.preferences);
             var assemblerMulti = Preferences.GetInt("assemblerMulti", 1);
             var smelterMulti = Preferences.GetInt("smelterMulti", 1);
@@ -114,6 +127,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(AssemblerComponent), "SetRecipe")]
         public static void SetRecipe(ref AssemblerComponent __instance, int recpId, SignData[] signPool)
         {
+            if (!active) return;
             // GS2.Warn("Set Recipe");
             var assemblerMulti = Preferences.GetInt("assemblerMulti", 1);
             var smelterMulti = Preferences.GetInt("smelterMulti", 1);
@@ -167,6 +181,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(AssemblerComponent), "Import")]
         public static void SetRecipe(ref AssemblerComponent __instance)
         {
+            if (!active) return;
             var assemblerMulti = Preferences.GetInt("assemblerMulti", 1);
             var smelterMulti = Preferences.GetInt("smelterMulti", 1);
             var chemicalPlantMulti = Preferences.GetInt("chemicalPlantMulti", 1);
@@ -188,6 +203,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(LabComponent), "SetFunction")]
         public static void SetFunction(ref LabComponent __instance)
         {
+            if (!active) return;
             // GS2.Warn("Set Recipe");
             if (__instance.productCounts == null) return;
             var laboratoryMulti = Preferences.GetInt("laboratoryMulti", 1);
@@ -201,6 +217,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(LabComponent), "Import")]
         public static void LabImport(ref LabComponent __instance)
         {
+            if (!active) return;
             var laboratoryMulti = Preferences.GetInt("laboratoryMulti", 1);
             if (__instance.productCounts == null) return;
             // GS2.Warn("Import");

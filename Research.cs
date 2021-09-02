@@ -101,12 +101,14 @@ namespace GalacticScaleCheats
             return false;
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(GuideMissionStandardMode), "OnPlanetFactoryLoad")]
-        public static void OnGameStart()
+        [HarmonyPostfix, HarmonyPatch(typeof(GameData), "InitLandingPlace")]
+        public static void InitLandingPlace()
         {
             if (!active || !Preferences.GetBool("unlockAll", false)) return;
+            GS2.Warn("Unlocking Tech");
             UnlockTech();
-        }
+        }        
+
 
         [HarmonyPrefix, HarmonyPatch(typeof(LabComponent), "InternalUpdateResearch")]
         public static bool InternalUpdateResearch(float power, ref float speed, int[] consumeRegister, ref TechState ts, ref int techHashedThisFrame, ref long uMatrixPoint, ref long hashRegister)

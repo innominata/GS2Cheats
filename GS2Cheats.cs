@@ -118,7 +118,6 @@ namespace GalacticScaleCheats
             options.Add(GSUI.Group("Dyson Sphere".Translate(), sphereOptions, "Settings which affect Dyson Spheres".Translate()));
             //options.Add(GSUI.Spacer());
             var factoryOptions = new GSOptions();
-            factoryOptions.Add(GSUI.Checkbox("Free Energy".Translate(), false, "freeEnergy", null, "Buildings do not require power".Translate()));
             factoryOptions.Add(GSUI.Checkbox("Fast Build".Translate(), false, "fastBuild", null, "Drones are lightning fast".Translate()));
             options.Add(GSUI.Group("Factory".Translate(), factoryOptions, "Settings which affect Dyson Spheres".Translate()));
             options.Add(GSUI.Spacer());

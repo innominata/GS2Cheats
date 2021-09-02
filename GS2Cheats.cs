@@ -309,5 +309,19 @@ namespace GalacticScaleCheats
             if (!active) return;
             instance.ProcessProtos(null);
         }
+
+        void FixedUpdate()
+        {
+            if (active)
+            {
+                if (!GS2.IsMenuDemo && GameMain.isRunning && !GameMain.isPaused)
+                {
+                    if (GameMain.mainPlayer != null)
+                    {
+                        MechaUpdate();
+                    }
+                }
+            }
+        }
     }
 }

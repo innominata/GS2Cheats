@@ -1,4 +1,4 @@
-﻿namespace GS2Cheats
+﻿namespace GalacticScaleCheats
 {
     public partial class GS2Cheats
     {

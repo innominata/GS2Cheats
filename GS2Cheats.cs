@@ -89,7 +89,7 @@ namespace GalacticScaleCheats
             GS2.Log("Initializing GS2 Cheats"); // Use Galactic Scales Log system for debugging purposes.
             options.Add(GSUI.Spacer());
             CreateRecipeOptions();
-            options.Add(GSUI.Spacer());
+            //options.Add(GSUI.Spacer());
             
             var playerOptions = new GSOptions();
             playerOptions.Add(GSUI.Checkbox("Unlimited Energy".Translate(), false, "unlimitedEnergy", null, "Never run out of core power".Translate()));
@@ -100,28 +100,28 @@ namespace GalacticScaleCheats
             playerOptions.Add(GSUI.Checkbox("Boost Sail Speed".Translate(), false, "boostSailSpeed", null, "Sail faster".Translate()));
             playerOptions.Add(GSUI.Checkbox("Boost Warp Speed".Translate(), false, "boostWarpSpeed", null, "Warp faster".Translate()));
             options.Add(GSUI.Group("Mecha".Translate(), playerOptions, "Settings which affect Icarus".Translate()));
-            
+            //options.Add(GSUI.Spacer());
             var researchOptions = new GSOptions();
             researchOptions.Add(GSUI.Checkbox("Unlock All".Translate(), false, "unlockAll", (o) => {if (o && GameMain.isPaused && !GS2.IsMenuDemo) UnlockTech();}, "Research everything instantly".Translate()));
             researchOptions.Add(GSUI.Checkbox("Free Research".Translate(), false, "freeResearch", null, "Unlock research when clicked".Translate()));
             researchOptions.Add(GSUI.Slider("Research Speed Multiplier".Translate(), 0.1f, 1f, 20f, 0.1f, "labSpeed", null, "Speed labs consume matrices".Translate()));
             options.Add(GSUI.Group("Research".Translate(), researchOptions, "Settings which affect research".Translate()));
-
+            //options.Add(GSUI.Spacer());
             var craftOptions = new GSOptions();
-            craftOptions.Add(GSUI.Checkbox("Factorio Modifiers".Translate(), false, "factorioCraft", null, "ShiftClick=10 AltClick=All".Translate()));
             craftOptions.Add(GSUI.Checkbox("Always Craft".Translate(), false, "alwaysCraft", null, "Never use items to handcraft".Translate()));
             craftOptions.Add(GSUI.Checkbox("Instant Craft".Translate(), false, "instantCraft", null, "Handcraft instantly".Translate()));
-            
+            options.Add(GSUI.Group("Crafting".Translate(), craftOptions, "Settings which affectHandcrafting".Translate()));
+            //options.Add(GSUI.Spacer());
             var sphereOptions = new GSOptions();
             sphereOptions.Add(GSUI.Checkbox("Unlock Dyson Spheres".Translate(), false, "unlockDyson", null, "Start with the dyson sphere system unlocked".Translate()));
             sphereOptions.Add(GSUI.Checkbox("Start with Full Sphere".Translate(), false, "fullSphere", null, "Remove tech requirement to access all latitudes".Translate()));
             options.Add(GSUI.Group("Dyson Sphere".Translate(), sphereOptions, "Settings which affect Dyson Spheres".Translate()));
-
+            //options.Add(GSUI.Spacer());
             var factoryOptions = new GSOptions();
             factoryOptions.Add(GSUI.Checkbox("Free Energy".Translate(), false, "freeEnergy", null, "Buildings do not require power".Translate()));
             factoryOptions.Add(GSUI.Checkbox("Fast Build".Translate(), false, "fastBuild", null, "Drones are lightning fast".Translate()));
             options.Add(GSUI.Group("Factory".Translate(), factoryOptions, "Settings which affect Dyson Spheres".Translate()));
-
+            options.Add(GSUI.Spacer());
         }
 
         private void CreateRecipeOptions()

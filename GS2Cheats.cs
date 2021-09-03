@@ -31,7 +31,7 @@ namespace GalacticScaleCheats
 
         public static GSGenPreferences Preferences => instance.preferences;
 
-        private static bool active => Preferences.GetBool("Enabled", true);
+        private static bool active => Preferences.GetBool("Enabled", true) && !GS2.IsMenuDemo;
 
         private void Awake()
         {
@@ -93,6 +93,8 @@ namespace GalacticScaleCheats
             
             var playerOptions = new GSOptions();
             playerOptions.Add(GSUI.Checkbox("Unlimited Energy".Translate(), false, "unlimitedEnergy", null, "Never run out of core power".Translate()));
+            playerOptions.Add(GSUI.Checkbox("Fast Build".Translate(), false, "fastBuild", null, "Drones are lightning fast".Translate()));
+
             playerOptions.Add(GSUI.Checkbox("Unlock Sail".Translate(), false, "unlockSail", null, "Start game able to fly".Translate()));
             playerOptions.Add(GSUI.Checkbox("Unlock Warp".Translate(), false, "unlockWarp", null, "Start game able to warp".Translate()));
             playerOptions.Add(GSUI.Checkbox("Always Warp".Translate(), false, "alwaysWarp", null, "Never require warpers to warp".Translate()));
@@ -117,9 +119,8 @@ namespace GalacticScaleCheats
             sphereOptions.Add(GSUI.Checkbox("Start with Full Sphere".Translate(), false, "fullSphere", null, "Remove tech requirement to access all latitudes".Translate()));
             options.Add(GSUI.Group("Dyson Sphere".Translate(), sphereOptions, "Settings which affect Dyson Spheres".Translate()));
             //options.Add(GSUI.Spacer());
-            var factoryOptions = new GSOptions();
-            factoryOptions.Add(GSUI.Checkbox("Fast Build".Translate(), false, "fastBuild", null, "Drones are lightning fast".Translate()));
-            options.Add(GSUI.Group("Factory".Translate(), factoryOptions, "Settings which affect Dyson Spheres".Translate()));
+            //var factoryOptions = new GSOptions();
+            //options.Add(GSUI.Group("Factory".Translate(), factoryOptions, "Settings which affect Dyson Spheres".Translate()));
             options.Add(GSUI.Spacer());
         }
 
@@ -246,10 +247,10 @@ namespace GalacticScaleCheats
                 SetRecipeSpeeds(exchangeSpeedMulti, ERecipeType.Exchange);
                 if (!DSPGame.IsMenuDemo)
                 {
-                    GS2.Warn("Game Running");
+                    //GS2.Warn("Game Running");
                     foreach (var factory in GameMain.data.factories)
                     {
-                        GS2.Warn("Processing Factory:");
+                        //GS2.Warn("Processing Factory:");
                         if (factory is null) continue;
                         if (factory.factorySystem != null)
                         {
@@ -307,6 +308,7 @@ namespace GalacticScaleCheats
         public static void Apply()
         {
             if (!active) return;
+            GS2.WarnJson(Preferences);
             instance.ProcessProtos(null);
         }
 

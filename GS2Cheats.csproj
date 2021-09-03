@@ -79,7 +79,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
-    <Copy OverwriteReadOnlyFiles="true" SourceFiles="$(TargetPath)" DestinationFolder="C:\Users\inno\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\plugins" />
+    <Copy OverwriteReadOnlyFiles="true" SourceFiles="$(TargetPath)" DestinationFolder="C:\Users\Tony\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\plugins" />
   </Target>
   <!--&gt;>>>>>> Stashed changes-->
 </Project>

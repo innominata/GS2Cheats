@@ -12,6 +12,7 @@ namespace GalacticScaleCheats
         {
             if (active && Preferences.GetBool("fullSphere")) __instance.dysonNodeLatitude = 90f;
         }
+
         [HarmonyPrefix]
         [HarmonyPatch(typeof(GameHistoryData), nameof(GameHistoryData.dysonSphereSystemUnlocked), MethodType.Getter)]
         public static bool DysonSphereSystemUnlocked_Prefix(GameHistoryData __instance, ref bool __result)

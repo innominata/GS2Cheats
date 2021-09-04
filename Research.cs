@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Linq;
-using GalacticScale;
 using HarmonyLib;
 using static GalacticScale.GS2;
+
 namespace GalacticScaleCheats
 {
     public partial class GS2Cheats
     {
-        
         // All credit to Windows10CE
         [HarmonyPostfix]
         [HarmonyPatch(typeof(GameHistoryData), "EnqueueTech")]
         public static void EnqueueTech_Postfix(GameHistoryData __instance, int techId)
         {
-            if (!active || !Preferences.GetBool("freeResearch", false)) return;
+            if (!active || !Preferences.GetBool("freeResearch")) return;
             __instance.UnlockTech(techId);
         }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(UITechNode), "DoStartTech")]
         public static void StartTechPostfix(ref UITechNode __instance)
         {
-            if (!active || !Preferences.GetBool("freeResearch", false)) return;
+            if (!active || !Preferences.GetBool("freeResearch")) return;
             if ((__instance.techProto?.ID ?? 1) == 1) return;
             UnlockTechRecursive(__instance.techProto.ID, GameMain.history);
             GameMain.history.DequeueTech();
         }
-        
+
         public static void UnlockTech()
         {
             Log("Unlocking Tech");
@@ -37,7 +37,6 @@ namespace GalacticScaleCheats
 
         private static void UnlockTechRecursive(int techId, GameHistoryData history)
         {
-
             //GS2.Warn($"UnlockTechRecursive {techId} {history != null}");
             var state = history.TechState(techId);
             var proto = LDB.techs.Select(techId);
@@ -65,11 +64,12 @@ namespace GalacticScaleCheats
                 Log("Techunlock exception caught: " + e.Message);
             }
         }
+
         [HarmonyPrefix]
         [HarmonyPatch(typeof(GameHistoryData), "PreTechUnlocked")]
         public static bool PreTechUnlockedPrefix(ref bool __result)
         {
-            if (!active || !Preferences.GetBool("freeResearch", false)) return true;
+            if (!active || !Preferences.GetBool("freeResearch")) return true;
             __result = true;
             return false;
         }
@@ -78,7 +78,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(GameHistoryData), "ImplicitPreTechRequired")]
         public static bool ImplicitPretechReqPrefix(ref int __result)
         {
-            if (!active || !Preferences.GetBool("freeResearch", false)) return true;
+            if (!active || !Preferences.GetBool("freeResearch")) return true;
             __result = 0;
             return false;
         }
@@ -87,7 +87,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(GameHistoryData), "CanEnqueueTech")]
         public static bool CanEnqueueTechPrefix(ref bool __result)
         {
-            if (!active || !Preferences.GetBool("freeResearch", false)) return true;
+            if (!active || !Preferences.GetBool("freeResearch")) return true;
             __result = true;
             return false;
         }
@@ -96,27 +96,29 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(GameHistoryData), "CanEnqueueTechIgnoreFull")]
         public static bool CanEnqueueTechIgnoreFullPrefix(ref bool __result)
         {
-            if (!active || !Preferences.GetBool("freeResearch", false)) return true;
+            if (!active || !Preferences.GetBool("freeResearch")) return true;
             __result = true;
             return false;
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(GameData), "InitLandingPlace")]
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(GameData), "InitLandingPlace")]
         public static void InitLandingPlace()
         {
-            if (!active || !Preferences.GetBool("unlockAll", false)) return;
-            GS2.Warn("Unlocking Tech");
+            if (!active || !Preferences.GetBool("unlockAll")) return;
+            Warn("Unlocking Tech");
             UnlockTech();
-        }        
+        }
 
 
-        [HarmonyPrefix, HarmonyPatch(typeof(LabComponent), "InternalUpdateResearch")]
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(LabComponent), "InternalUpdateResearch")]
         public static bool InternalUpdateResearch(float power, ref float speed, int[] consumeRegister, ref TechState ts, ref int techHashedThisFrame, ref long uMatrixPoint, ref long hashRegister)
         {
             if (!active || Preferences.GetFloat("labSpeed", 1f) == 1f) return true;
-            GS2.Warn("Editing "+speed);
+            Warn("Editing " + speed);
             speed = Preferences.GetFloat("labSpeed", 1f);
-            GS2.Warn("Edited "+speed + " " + Preferences.GetFloat("labSpeed", 1f));
+            Warn("Edited " + speed + " " + Preferences.GetFloat("labSpeed", 1f));
             return true;
         }
     }

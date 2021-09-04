@@ -3,7 +3,6 @@ using BepInEx;
 using BepInEx.Logging;
 using GalacticScale;
 using HarmonyLib;
-using Steamworks;
 using UnityEngine;
 
 namespace GalacticScaleCheats
@@ -44,6 +43,14 @@ namespace GalacticScaleCheats
             // GS2.LoadPreferences();
             // GS2.Warn("Test");
             Harmony.CreateAndPatchAll(typeof(GS2Cheats));
+        }
+
+        private void FixedUpdate()
+        {
+            if (active)
+                if (!GS2.IsMenuDemo && GameMain.isRunning && !GameMain.isPaused)
+                    if (GameMain.mainPlayer != null)
+                        MechaUpdate();
         }
 
         public string Name => "GS2Cheats";
@@ -90,7 +97,7 @@ namespace GalacticScaleCheats
             options.Add(GSUI.Spacer());
             CreateRecipeOptions();
             //options.Add(GSUI.Spacer());
-            
+
             var playerOptions = new GSOptions();
             playerOptions.Add(GSUI.Checkbox("Unlimited Energy".Translate(), false, "unlimitedEnergy", null, "Never run out of core power".Translate()));
             playerOptions.Add(GSUI.Checkbox("Fast Build".Translate(), false, "fastBuild", null, "Drones are lightning fast".Translate()));
@@ -104,7 +111,10 @@ namespace GalacticScaleCheats
             options.Add(GSUI.Group("Mecha".Translate(), playerOptions, "Settings which affect Icarus".Translate()));
             //options.Add(GSUI.Spacer());
             var researchOptions = new GSOptions();
-            researchOptions.Add(GSUI.Checkbox("Unlock All".Translate(), false, "unlockAll", (o) => {if (o && GameMain.isPaused && !GS2.IsMenuDemo) UnlockTech();}, "Research everything instantly".Translate()));
+            researchOptions.Add(GSUI.Checkbox("Unlock All".Translate(), false, "unlockAll", o =>
+            {
+                if (o && GameMain.isPaused && !GS2.IsMenuDemo) UnlockTech();
+            }, "Research everything instantly".Translate()));
             researchOptions.Add(GSUI.Checkbox("Free Research".Translate(), false, "freeResearch", null, "Unlock research when clicked".Translate()));
             researchOptions.Add(GSUI.Slider("Research Speed Multiplier".Translate(), 0.1f, 1f, 20f, 0.1f, "labSpeed", null, "Speed labs consume matrices".Translate()));
             options.Add(GSUI.Group("Research".Translate(), researchOptions, "Settings which affect research".Translate()));
@@ -246,7 +256,6 @@ namespace GalacticScaleCheats
                 var exchangeSpeedMulti = instance.preferences.GetFloat("exchangeSpeedMulti", 1);
                 SetRecipeSpeeds(exchangeSpeedMulti, ERecipeType.Exchange);
                 if (!DSPGame.IsMenuDemo)
-                {
                     //GS2.Warn("Game Running");
                     foreach (var factory in GameMain.data.factories)
                     {
@@ -267,7 +276,6 @@ namespace GalacticScaleCheats
                                     }
                         }
                     }
-                }
             }
         }
 
@@ -310,20 +318,7 @@ namespace GalacticScaleCheats
             if (!active) return;
             GS2.WarnJson(Preferences);
             instance.ProcessProtos(null);
-        }
-
-        void FixedUpdate()
-        {
-            if (active)
-            {
-                if (!GS2.IsMenuDemo && GameMain.isRunning && !GameMain.isPaused)
-                {
-                    if (GameMain.mainPlayer != null)
-                    {
-                        MechaUpdate();
-                    }
-                }
-            }
+            MechaApply();
         }
     }
 }

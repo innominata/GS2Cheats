@@ -1,4 +1,7 @@
-﻿namespace GalacticScaleCheats
+﻿using GalacticScale;
+using HarmonyLib;
+
+namespace GalacticScaleCheats
 {
     public partial class GS2Cheats
     {
@@ -9,17 +12,41 @@
         //    playerOptions.Add(GSUI.Checkbox("Boost Walk Speed".Translate(), false, "boostWalkSpeed", null, "Walk faster".Translate()));
         //    playerOptions.Add(GSUI.Checkbox("Boost Sail Speed".Translate(), false, "boostSailSpeed", null, "Sail faster".Translate()));
         //    playerOptions.Add(GSUI.Checkbox("Boost Warp Speed".Translate(), false, "boostWarpSpeed", null, "Warp faster".Translate()));
-        void MechaUpdate()
+        private void MechaUpdate()
         {
+            if (VFInput.alt && VFInput._moveRight) GS2.Warn(active.ToString());
+            if (!active) return;
             var mecha = GameMain.mainPlayer.mecha;
-            if (preferences.GetBool("unLimitedEnergy", false))
-            {
-                mecha.coreEnergy = mecha.coreEnergyCap;
-            }
-            //if (preferences.GetBool("unlockSail", false))
-            //{
-            //    //GameMain
-            //}
+            if (preferences.GetBool("unlimitedEnergy")) mecha.coreEnergy = mecha.coreEnergyCap;
+            // if (preferences.GetBool("unlockSail", false))
+            // {
+            //     //GameMain
+            // }
+        }
+
+        private static void MechaApply()
+        {
+            if (active && Preferences.GetBool("unlockSail")) GameMain.mainPlayer.mecha.thrusterLevel = 4;
+            if (active && Preferences.GetBool("unlockWarp")) GameMain.mainPlayer.mecha.thrusterLevel = 5;
+            if (active && Preferences.GetBool("boostWalkSpeed")) GameMain.mainPlayer.mecha.walkSpeed = 25;
+            if (active && Preferences.GetBool("boostSailSpeed")) GameMain.mainPlayer.mecha.maxSailSpeed = 2000f;
+            if (active && Preferences.GetBool("boostWarpSpeed")) GameMain.mainPlayer.mecha.maxWarpSpeed = 1000000f;
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(GameHistoryData), nameof(GameHistoryData.SetForNewGame))]
+        public static void SetForNewGame_PlayerPostfix(GameHistoryData __instance)
+        {
+            if (active && Preferences.GetBool("unlockSail")) GameMain.mainPlayer.mecha.thrusterLevel = 4;
+            if (active && Preferences.GetBool("unlockWarp")) GameMain.mainPlayer.mecha.thrusterLevel = 5;
+            if (active && Preferences.GetBool("boostWalkSpeed")) GameMain.mainPlayer.mecha.walkSpeed = 25;
+            if (active && Preferences.GetBool("boostSailSpeed")) GameMain.mainPlayer.mecha.walkSpeed = 4000f;
+            if (active && Preferences.GetBool("boostWarpSpeed")) GameMain.mainPlayer.mecha.walkSpeed = 1000000f;
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Mecha),"UseWarper")]
+        public static void UseWarper_Postfix(ref bool __result)
+        {
+            if (active && Preferences.GetBool("alwaysWarp")) __result = true;
         }
     }
 }

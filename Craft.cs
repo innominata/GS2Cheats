@@ -375,7 +375,7 @@ namespace GalacticScaleCheats
                     __instance.mouseInTime += Time.deltaTime;
                     if (__instance.mouseInTime > __instance.showTipsDelay)
                     {
-                        if (__instance.screenTip == null) __instance.screenTip = UIItemTip.Create(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, !recipeProto.Handcraft);
+                        if (__instance.screenTip == null) __instance.screenTip = UIItemTip.Create(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, false);
                         if (!__instance.screenTip.gameObject.activeSelf)
                         {
                             __instance.screenTip.gameObject.SetActive(true);

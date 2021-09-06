@@ -17,7 +17,7 @@ namespace GalacticScaleCheats
             if (VFInput.alt && VFInput._moveRight) GS2.Warn(active.ToString());
             if (!active) return;
             var mecha = GameMain.mainPlayer.mecha;
-            if (preferences.GetBool("unlimitedEnergy")) mecha.coreEnergy = mecha.coreEnergyCap;
+            if (Preferences.GetBool("unlimitedEnergy")) mecha.coreEnergy = mecha.coreEnergyCap;
             // if (preferences.GetBool("unlockSail", false))
             // {
             //     //GameMain
@@ -32,6 +32,7 @@ namespace GalacticScaleCheats
             if (active && Preferences.GetBool("boostSailSpeed")) GameMain.mainPlayer.mecha.maxSailSpeed = 2000f;
             if (active && Preferences.GetBool("boostWarpSpeed")) GameMain.mainPlayer.mecha.maxWarpSpeed = 1000000f;
         }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(GameHistoryData), nameof(GameHistoryData.SetForNewGame))]
         public static void SetForNewGame_PlayerPostfix(GameHistoryData __instance)
@@ -42,8 +43,9 @@ namespace GalacticScaleCheats
             if (active && Preferences.GetBool("boostSailSpeed")) GameMain.mainPlayer.mecha.walkSpeed = 4000f;
             if (active && Preferences.GetBool("boostWarpSpeed")) GameMain.mainPlayer.mecha.walkSpeed = 1000000f;
         }
+
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(Mecha),"UseWarper")]
+        [HarmonyPatch(typeof(Mecha), "UseWarper")]
         public static void UseWarper_Postfix(ref bool __result)
         {
             if (active && Preferences.GetBool("alwaysWarp")) __result = true;

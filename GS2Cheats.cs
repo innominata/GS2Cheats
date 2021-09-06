@@ -14,21 +14,25 @@ namespace GalacticScaleCheats
         //////////////////////////////
         /// Finally, lets do something
         //////////////////////////////
-        public static GS2Cheats instance;
-
+        // public static GS2Cheats instance;
         public new static ManualLogSource Logger;
+
+        public static GSGenPreferences Preferences = new GSGenPreferences();
+        private static bool recipesDirty = true;
+
+        private static RecipeProto[] recipesProto;
 
         //////////////////////////////////////////////////////////////////////
         ///// All code below here is generator specific
         //////////////////////////////////////////////////////////////////////
         public GSOptions options = new GSOptions();
-        public GSGenPreferences preferences = new GSGenPreferences();
-        private bool recipesDirty = true;
-
-        private RecipeProto[] recipesProto;
         public new GSGeneratorConfig Config { get; } = new GSGeneratorConfig();
 
-        public static GSGenPreferences Preferences => instance.preferences;
+        // public static GSGenPreferences Preferences
+        // {
+        //     get { return Preferences; }
+        //     set { Preferences = value; }
+        // }
 
         private static bool active => Preferences.GetBool("Enabled", true) && !GS2.IsMenuDemo;
 
@@ -38,8 +42,7 @@ namespace GalacticScaleCheats
             BepInEx.Logging.Logger.Sources.Add(Logger);
             Logger.Log(LogLevel.Message, "Loaded");
             GS2.Plugins.Add(this);
-            instance = this;
-            instance.Init();
+            Init();
             // GS2.LoadPreferences();
             // GS2.Warn("Test");
             Harmony.CreateAndPatchAll(typeof(GS2Cheats));
@@ -64,31 +67,29 @@ namespace GalacticScaleCheats
         {
             get
             {
-                if (preferences.ContainsKey("Enabled")) GS2.Warn("Contains");
+                if (Preferences.ContainsKey("Enabled")) GS2.Warn("Contains");
                 else GS2.Warn("Doesnt contain");
                 return Preferences.GetBool("Enabled", true);
             }
             set
             {
                 GS2.Warn($"Setting Enabled:{value}");
-                preferences.Set("Enabled", value);
+                Preferences.Set("Enabled", value);
             }
         }
 
-        public void Import(GSGenPreferences prefs) //This is called on game start, with the same object that was exported last time
+        public void Import(GSGenPreferences prefs)
         {
-            // GS2.Warn("Import");
-            // GS2.WarnJson(preferences.GetString("Enabled"));
-            preferences = prefs;
-            // GS2.WarnJson(preferences.GetString("Enabled"));
+            Preferences = prefs;
+            GS2.WarnJson(Preferences.GetString("Enabled"));
         }
 
-        public GSGenPreferences Export() // Send our custom preferences object to be saved to disk
+        public GSGenPreferences Export() // Send our custom Preferences object to be saved to disk
         {
-            // GS2.Warn("Exporting");
-            // GS2.WarnJson(preferences.GetString("Enabled"));
-            preferences.Set("Enabled", active);
-            return preferences;
+            GS2.Warn("Exporting");
+            GS2.Warn($"Value of Enabled:{Preferences.GetString("Enabled")}");
+            // Preferences.Set("Enabled", active);
+            return Preferences;
         }
 
         public void Init()
@@ -120,6 +121,7 @@ namespace GalacticScaleCheats
             options.Add(GSUI.Group("Research".Translate(), researchOptions, "Settings which affect research".Translate()));
             //options.Add(GSUI.Spacer());
             var craftOptions = new GSOptions();
+            craftOptions.Add(GSUI.Checkbox("Handcraft Everything".Translate(), false, "handCraftEverything", null, "Handcraft All Items".Translate()));
             craftOptions.Add(GSUI.Checkbox("Always Craft".Translate(), false, "alwaysCraft", null, "Never use items to handcraft".Translate()));
             craftOptions.Add(GSUI.Checkbox("Instant Craft".Translate(), false, "instantCraft", null, "Handcraft instantly".Translate()));
             options.Add(GSUI.Group("Crafting".Translate(), craftOptions, "Settings which affectHandcrafting".Translate()));
@@ -180,80 +182,80 @@ namespace GalacticScaleCheats
         }
 
 
-        public void BackupProtos()
+        public static void BackupProtos()
         {
             recipesProto = LDB.recipes.dataArray.Copy();
         }
 
-        public void ProcessProtos(Val o)
+        public static void ProcessProtos(Val o)
         {
             if (recipesDirty)
             {
                 recipesDirty = false;
-                var assemblerMulti = instance.preferences.GetFloat("assemblerMulti", 1);
+                var assemblerMulti = Preferences.GetFloat("assemblerMulti", 1);
                 SetRecipeResultCounts(assemblerMulti, ERecipeType.Assemble);
 
-                var laboratoryMulti = instance.preferences.GetFloat("laboratoryMulti", 1);
+                var laboratoryMulti = Preferences.GetFloat("laboratoryMulti", 1);
                 SetRecipeResultCounts(laboratoryMulti, ERecipeType.Research);
 
-                var smelterMulti = instance.preferences.GetFloat("smelterMulti", 1);
+                var smelterMulti = Preferences.GetFloat("smelterMulti", 1);
                 SetRecipeResultCounts(smelterMulti, ERecipeType.Smelt);
 
-                var chemicalPlantMulti = instance.preferences.GetFloat("chemicalPlantMulti", 1);
+                var chemicalPlantMulti = Preferences.GetFloat("chemicalPlantMulti", 1);
                 SetRecipeResultCounts(chemicalPlantMulti, ERecipeType.Chemical);
 
-                var refineryMulti = instance.preferences.GetFloat("refineryMulti", 1);
+                var refineryMulti = Preferences.GetFloat("refineryMulti", 1);
                 SetRecipeResultCounts(refineryMulti, ERecipeType.Refine);
 
-                var particleMulti = instance.preferences.GetFloat("particleMulti", 1);
+                var particleMulti = Preferences.GetFloat("particleMulti", 1);
                 SetRecipeResultCounts(particleMulti, ERecipeType.Particle);
 
-                var photonMulti = instance.preferences.GetFloat("photonMulti", 1);
+                var photonMulti = Preferences.GetFloat("photonMulti", 1);
                 SetRecipeResultCounts(photonMulti, ERecipeType.PhotonStore);
 
-                var fractionatorMulti = instance.preferences.GetFloat("fractionatorMulti", 1);
+                var fractionatorMulti = Preferences.GetFloat("fractionatorMulti", 1);
                 SetRecipeResultCounts(fractionatorMulti, ERecipeType.Fractionate);
 
-                var exchangeMulti = instance.preferences.GetFloat("exchangeMulti", 1);
+                var exchangeMulti = Preferences.GetFloat("exchangeMulti", 1);
                 SetRecipeResultCounts(exchangeMulti, ERecipeType.Exchange);
 
 
-                var assemblerInputMulti = instance.preferences.GetFloat("assemblerInputMulti", 1);
+                var assemblerInputMulti = Preferences.GetFloat("assemblerInputMulti", 1);
                 SetRecipeInputCounts(assemblerInputMulti, ERecipeType.Assemble);
-                var laboratoryInputMulti = instance.preferences.GetFloat("laboratoryInputMulti", 1);
+                var laboratoryInputMulti = Preferences.GetFloat("laboratoryInputMulti", 1);
                 SetRecipeInputCounts(laboratoryInputMulti, ERecipeType.Research);
-                var smelterInputMulti = instance.preferences.GetFloat("smelterInputMulti", 1);
+                var smelterInputMulti = Preferences.GetFloat("smelterInputMulti", 1);
                 SetRecipeInputCounts(smelterInputMulti, ERecipeType.Smelt);
-                var chemicalPlantInputMulti = instance.preferences.GetFloat("chemicalPlantInputMulti", 1);
+                var chemicalPlantInputMulti = Preferences.GetFloat("chemicalPlantInputMulti", 1);
                 SetRecipeInputCounts(chemicalPlantInputMulti, ERecipeType.Chemical);
-                var refineryInputMulti = instance.preferences.GetFloat("refineryInputMulti", 1);
+                var refineryInputMulti = Preferences.GetFloat("refineryInputMulti", 1);
                 SetRecipeInputCounts(refineryInputMulti, ERecipeType.Refine);
-                var particleInputMulti = instance.preferences.GetFloat("particleInputMulti", 1);
+                var particleInputMulti = Preferences.GetFloat("particleInputMulti", 1);
                 SetRecipeInputCounts(particleInputMulti, ERecipeType.Particle);
-                var photonInputMulti = instance.preferences.GetFloat("photonInputMulti", 1);
+                var photonInputMulti = Preferences.GetFloat("photonInputMulti", 1);
                 SetRecipeInputCounts(photonInputMulti, ERecipeType.PhotonStore);
-                var fractionatorInputMulti = instance.preferences.GetFloat("fractionatorInputMulti", 1);
+                var fractionatorInputMulti = Preferences.GetFloat("fractionatorInputMulti", 1);
                 SetRecipeInputCounts(fractionatorInputMulti, ERecipeType.Fractionate);
-                var exchangeInputMulti = instance.preferences.GetFloat("exchangeInputMulti", 1);
+                var exchangeInputMulti = Preferences.GetFloat("exchangeInputMulti", 1);
                 SetRecipeInputCounts(exchangeInputMulti, ERecipeType.Exchange);
 
-                var assemblerSpeedMulti = instance.preferences.GetFloat("assemblerSpeedMulti", 1);
+                var assemblerSpeedMulti = Preferences.GetFloat("assemblerSpeedMulti", 1);
                 SetRecipeSpeeds(assemblerSpeedMulti, ERecipeType.Assemble);
-                var laboratorySpeedMulti = instance.preferences.GetFloat("laboratorySpeedMulti", 1);
+                var laboratorySpeedMulti = Preferences.GetFloat("laboratorySpeedMulti", 1);
                 SetRecipeSpeeds(laboratorySpeedMulti, ERecipeType.Research);
-                var smelterSpeedMulti = instance.preferences.GetFloat("smelterSpeedMulti", 1);
+                var smelterSpeedMulti = Preferences.GetFloat("smelterSpeedMulti", 1);
                 SetRecipeSpeeds(smelterSpeedMulti, ERecipeType.Smelt);
-                var chemicalPlantSpeedMulti = instance.preferences.GetFloat("chemicalPlantSpeedMulti", 1);
+                var chemicalPlantSpeedMulti = Preferences.GetFloat("chemicalPlantSpeedMulti", 1);
                 SetRecipeSpeeds(chemicalPlantSpeedMulti, ERecipeType.Chemical);
-                var refinerySpeedMulti = instance.preferences.GetFloat("refinerySpeedMulti", 1);
+                var refinerySpeedMulti = Preferences.GetFloat("refinerySpeedMulti", 1);
                 SetRecipeSpeeds(refinerySpeedMulti, ERecipeType.Refine);
-                var particleSpeedMulti = instance.preferences.GetFloat("particleSpeedMulti", 1);
+                var particleSpeedMulti = Preferences.GetFloat("particleSpeedMulti", 1);
                 SetRecipeSpeeds(particleSpeedMulti, ERecipeType.Particle);
-                var photonSpeedMulti = instance.preferences.GetFloat("photonSpeedMulti", 1);
+                var photonSpeedMulti = Preferences.GetFloat("photonSpeedMulti", 1);
                 SetRecipeSpeeds(photonSpeedMulti, ERecipeType.PhotonStore);
-                var fractionatorSpeedMulti = instance.preferences.GetFloat("fractionatorSpeedMulti", 1);
+                var fractionatorSpeedMulti = Preferences.GetFloat("fractionatorSpeedMulti", 1);
                 SetRecipeSpeeds(fractionatorSpeedMulti, ERecipeType.Fractionate);
-                var exchangeSpeedMulti = instance.preferences.GetFloat("exchangeSpeedMulti", 1);
+                var exchangeSpeedMulti = Preferences.GetFloat("exchangeSpeedMulti", 1);
                 SetRecipeSpeeds(exchangeSpeedMulti, ERecipeType.Exchange);
                 if (!DSPGame.IsMenuDemo)
                     //GS2.Warn("Game Running");
@@ -279,7 +281,7 @@ namespace GalacticScaleCheats
             }
         }
 
-        public void SetRecipeResultCounts(float multi, ERecipeType type)
+        public static void SetRecipeResultCounts(float multi, ERecipeType type)
         {
             if (!active) return;
             for (var i = 0; i < LDB.recipes.dataArray.Length; i++)
@@ -288,7 +290,7 @@ namespace GalacticScaleCheats
                     LDB.recipes.dataArray[i].ResultCounts[j] = Mathf.CeilToInt(recipesProto[i].ResultCounts[j] * multi);
         }
 
-        public void SetRecipeInputCounts(float multi, ERecipeType type)
+        public static void SetRecipeInputCounts(float multi, ERecipeType type)
         {
             if (!active) return;
 
@@ -301,7 +303,7 @@ namespace GalacticScaleCheats
             }
         }
 
-        public void SetRecipeSpeeds(float multi, ERecipeType type)
+        public static void SetRecipeSpeeds(float multi, ERecipeType type)
         {
             for (var i = 0; i < LDB.recipes.dataArray.Length; i++)
             {
@@ -317,7 +319,7 @@ namespace GalacticScaleCheats
         {
             if (!active) return;
             GS2.WarnJson(Preferences);
-            instance.ProcessProtos(null);
+            ProcessProtos(null);
             MechaApply();
         }
     }

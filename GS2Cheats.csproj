@@ -1,85 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{51AD1C87-406C-4AC6-A431-8F3698C43FA3}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>GS2Cheats</RootNamespace>
+        <DevEnvLoc>$(MSBuildThisFileDirectory)DevEnv.targets</DevEnvLoc>
+        <TargetFramework>net480</TargetFramework>
+        <RootNamespace>GalacticScale</RootNamespace>
+    </PropertyGroup>
+    <Import Project="$(DevEnvLoc)" Condition="Exists('$(DevEnvLoc)')" />
+    <PropertyGroup>
         <AssemblyName>GS2Cheats</AssemblyName>
-        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <Deterministic>true</Deterministic>
-        <TargetFrameworkProfile/>
+        <Description>Cheats for GalacticScale 2</Description>
+        <Version>1.1.6</Version>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>9.0</LangVersion>
+        <OutDir>bin/$(Configuration)</OutDir>
+        <OutDir Condition="Exists($(PluginDir))">$(PluginDir)\innominata-GS2Cheats\</OutDir>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>C:\code\temp</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <Prefer32Bit>false</Prefer32Bit>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
-        <OutputPath>bin\Test\</OutputPath>
-    </PropertyGroup>
+
     <ItemGroup>
-        <Reference Include="0Harmony">
-            <HintPath>..\..\Users\inno\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\core\0Harmony.dll</HintPath>
-        </Reference>
-        <Reference Include="Assembly-CSharp_Publicized_8_19_7662, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\GS\GalacticScale2\bin\Debug\Assembly-CSharp_Publicized_8_19_7662.dll</HintPath>
-        </Reference>
-        <Reference Include="BepInEx">
-            <HintPath>E:\code\GalacticScale2\GalacticScale2\bin\Debug\BepInEx.dll</HintPath>
-        </Reference>
-        <Reference Include="BepInEx.Harmony">
-            <HintPath>..\..\Users\inno\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\core\BepInEx.Harmony.dll</HintPath>
-        </Reference>
-        <Reference Include="GalacticScale">
-            <HintPath>E:\code\GalacticScale2\GalacticScale2\bin\Debug\GalacticScale.dll</HintPath>
-        </Reference>
-        <Reference Include="netstandard">
-            <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\netstandard.dll</HintPath>
-        </Reference>
-        <Reference Include="System"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Xml.Linq"/>
-        <Reference Include="System.Data.DataSetExtensions"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>E:\code\GalacticScale2\GalacticScale2\bin\Debug\UnityEngine.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>E:\code\GalacticScale2\GalacticScale2\bin\Debug\UnityEngine.CoreModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>E:\code\GalacticScale2\GalacticScale2\bin\Debug\UnityEngine.UI.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>E:\code\GalacticScale2\GalacticScale2\bin\Debug\UnityEngine.UIModule.dll</HintPath>
-        </Reference>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+        <PackageReference Include="UnityEngine.Modules" Version="2018.4.12" IncludeAssets="compile" />
+        <PackageReference Include="DysonSphereProgram.GameLibs" Version="0.9.25.12201-r.0" IncludeAssets="compile" />
+        <PackageReference Include="DysonSphereProgram.Modding.NebulaMultiplayerModApi" Version="*" IncludeAssets="compile" />
     </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    </ItemGroup>
+
     <ItemGroup>
-        <Compile Include="Clone.cs"/>
-        <Compile Include="Craft.cs"/>
-        <Compile Include="Factory.cs"/>
-        <Compile Include="Sphere.cs"/>
-        <Compile Include="Player.cs"/>
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="Properties\Publicizer.cs"/>
-        <Compile Include="GS2Cheats.cs"/>
-        <Compile Include="Research.cs"/>
+      <Reference Include="GalacticScale, Version=2.5.12.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Users\inno\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\plugins\Galactic_Scale-GalacticScale\GalacticScale.dll</HintPath>
+      </Reference>
     </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
-    <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
-        <Copy OverwriteReadOnlyFiles="true" SourceFiles="$(TargetPath)" DestinationFolder="C:\Users\inno\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\plugins"/>
-    </Target>
-    <!--&gt;>>>>>> Stashed changes-->
+
 </Project>

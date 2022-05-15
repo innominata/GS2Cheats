@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using GalacticScale;
 using HarmonyLib;
 using UnityEngine;
-
+using GalacticScale;
 namespace GalacticScaleCheats
 {
     public partial class GS2Cheats
@@ -15,7 +14,7 @@ namespace GalacticScaleCheats
         public static void TryAddTask_Postfix(ref bool __result)
         {
             // GS2.Log("TATPost" +__result);
-            if (!active || (!Preferences.GetBool("alwaysCraft")&&!Preferences.GetBool("handCraftEverything"))) return;
+            if (!active || !Preferences.GetBool("alwaysCraft") && !Preferences.GetBool("handCraftEverything")) return;
             __result = true;
         }
 
@@ -27,7 +26,7 @@ namespace GalacticScaleCheats
             if (Preferences.GetBool("alwaysCraft"))
             {
                 var recipe = new ForgeTask(recipeId, count);
-                for (var i = 0; i < recipe.productIds.Length; i++) GameMain.mainPlayer.package.AddItemStacked(recipe.productIds[i], count * recipe.productCounts[i]);
+                for (var i = 0; i < recipe.productIds.Length; i++) GameMain.mainPlayer.package.AddItemStacked(recipe.productIds[i], count * recipe.productCounts[i], 1, out var _);
                 __result = null;
                 return false;
             }
@@ -87,7 +86,7 @@ namespace GalacticScaleCheats
 
                     if (num3 > 0)
                     {
-                        var num6 = __instance.player.package.TakeItem(num, num3);
+                        var num6 = __instance.player.package.TakeItem(num, num3, out var _);
                         num4 += num6;
                         forgeTask.served[i] += num6;
                     }
@@ -167,6 +166,7 @@ namespace GalacticScaleCheats
                 GS2.Log("Success");
                 return false;
             }
+
             return true;
         }
 
@@ -193,7 +193,7 @@ namespace GalacticScaleCheats
         [HarmonyPatch(typeof(MechaForge), "AddTask")]
         public static void AddTaskPostfix(ref ForgeTask __result)
         {
-            GS2.Log("ATPost" +__result);
+            GS2.Log("ATPost" + __result);
             if (!active || !Preferences.GetBool("alwaysCraft")) return;
             if (__result == null) __result = new ForgeTask();
         }
@@ -213,6 +213,7 @@ namespace GalacticScaleCheats
                 GS2.Log("AT Success");
                 return false;
             }
+
             GS2.Log("AT FAIL");
             __result = null;
             return false;
@@ -375,17 +376,18 @@ namespace GalacticScaleCheats
                     __instance.mouseInTime += Time.deltaTime;
                     if (__instance.mouseInTime > __instance.showTipsDelay)
                     {
-                        if (__instance.screenTip == null) __instance.screenTip = UIItemTip.Create(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, false);
+                        var productive = recipeProto.productive;
+                        if (__instance.screenTip == null) __instance.screenTip = UIItemTip.Create(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, 0, 0, UIButton.ItemTipType.Recipe, !recipeProto.Handcraft, !productive, true);
                         if (!__instance.screenTip.gameObject.activeSelf)
                         {
                             __instance.screenTip.gameObject.SetActive(true);
-                            __instance.screenTip.SetTip(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, false);
+                            __instance.screenTip.SetTip(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, 0, 0, UIButton.ItemTipType.Recipe, !recipeProto.Handcraft, !productive, true);
                             return false;
                         }
 
                         if (__instance.screenTip.showingItemId != num9)
                         {
-                            __instance.screenTip.SetTip(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, false);
+                            __instance.screenTip.SetTip(num9, __instance.tipAnchor, new Vector2(num7 * 46 + 15, -(float)num8 * 46 - 50), __instance.recipeBg.transform, 0, 0, UIButton.ItemTipType.Recipe, !recipeProto.Handcraft, !productive, true);
                             return false;
                         }
                     }
@@ -413,6 +415,7 @@ namespace GalacticScaleCheats
                 GS2.Log("SKIPPING");
                 return true;
             }
+
             GS2.Log("Not Skipping");
             if (__instance.selectedRecipe != null)
             {

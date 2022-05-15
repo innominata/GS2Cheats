@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace GalacticScaleCheats
 {
-    [BepInPlugin("dsp.galactic-scale.2.cheats", "Galactic Scale 2 Cheats", "1.0.0.3")]
+    [BepInPlugin("dsp.galactic-scale.2.cheats", "Galactic Scale 2 Cheats", "1.1.5.0")]
     [BepInDependency("dsp.galactic-scale.2")]
-    public partial class GS2Cheats : BaseUnityPlugin, iConfigurablePlugin
+    public partial class GS2Cheats : BaseUnityPlugin, GalacticScale.iConfigurablePlugin
     {
         //////////////////////////////
         /// Finally, lets do something
@@ -17,7 +17,7 @@ namespace GalacticScaleCheats
         // public static GS2Cheats instance;
         public new static ManualLogSource Logger;
 
-        public static GSGenPreferences Preferences = new GSGenPreferences();
+        public static GSGenPreferences Preferences = new();
         private static bool recipesDirty = true;
 
         private static RecipeProto[] recipesProto;
@@ -25,8 +25,8 @@ namespace GalacticScaleCheats
         //////////////////////////////////////////////////////////////////////
         ///// All code below here is generator specific
         //////////////////////////////////////////////////////////////////////
-        public GSOptions options = new GSOptions();
-        public new GSGeneratorConfig Config { get; } = new GSGeneratorConfig();
+        public GSOptions options = new();
+        public new GSGeneratorConfig Config { get; } = new();
 
         // public static GSGenPreferences Preferences
         // {
@@ -56,10 +56,15 @@ namespace GalacticScaleCheats
                         MechaUpdate();
         }
 
+        public void OnUpdate(string key, Val val)
+        {
+            Preferences.Set(key, val);
+        }
+
         public string Name => "GS2Cheats";
         public string Author => "innominata";
         public string Description => "Some Cheats for DSP";
-        public string Version => "1.0.0.0";
+        public string Version => "1.1.5.0";
         public string GUID => "space.customizing.generators.cheats";
         public GSOptions Options => options; // Likewise for options
 
@@ -285,9 +290,22 @@ namespace GalacticScaleCheats
         {
             if (!active) return;
             for (var i = 0; i < LDB.recipes.dataArray.Length; i++)
-            for (var j = 0; j < LDB.recipes.dataArray[i].ResultCounts.Length; j++)
-                if (LDB.recipes.dataArray[i].Type == type)
-                    LDB.recipes.dataArray[i].ResultCounts[j] = Mathf.CeilToInt(recipesProto[i].ResultCounts[j] * multi);
+            {
+                for (var j = 0; j < LDB.recipes.dataArray[i].ResultCounts.Length; j++)
+                {
+                    if (LDB.recipes.dataArray.Length > i 
+                        && LDB.recipes.dataArray[i].Type == type 
+                        && LDB.recipes.dataArray[i].ResultCounts.Length > j
+                        && recipesProto.Length > i
+                        && recipesProto[i].ResultCounts.Length > j
+                        )
+                    {
+                        var rpi = recipesProto[i];
+                        var rpircj = rpi.ResultCounts[j];
+                        LDB.recipes.dataArray[i].ResultCounts[j] = Mathf.CeilToInt(rpircj * multi);
+                    }
+                }
+            }
         }
 
         public static void SetRecipeInputCounts(float multi, ERecipeType type)
@@ -297,8 +315,11 @@ namespace GalacticScaleCheats
             for (var i = 0; i < LDB.recipes.dataArray.Length; i++)
             for (var j = 0; j < LDB.recipes.dataArray[i].ItemCounts.Length; j++)
             {
+                if (recipesProto.Length <= i || recipesProto[i].ItemCounts.Length <= j) continue;
                 var newCount = Mathf.RoundToInt(recipesProto[i].ItemCounts[j] * multi);
                 if (newCount < 1) newCount = 1;
+                if (LDB.recipes.dataArray.Length <= i) continue;
+                if (LDB.recipes.dataArray[i].ItemCounts.Length <=j) continue;
                 if (LDB.recipes.dataArray[i].Type == type) LDB.recipes.dataArray[i].ItemCounts[j] = newCount;
             }
         }
@@ -307,6 +328,8 @@ namespace GalacticScaleCheats
         {
             for (var i = 0; i < LDB.recipes.dataArray.Length; i++)
             {
+                if (LDB.recipes.dataArray.Length <= i) continue;
+                if (recipesProto.Length <= i) continue;
                 if (LDB.recipes.dataArray[i].Type == ERecipeType.Research && type == ERecipeType.Research && LDB.recipes.dataArray[i].ID == 101) GS2.WarnJson(LDB.recipes.dataArray[i]);
                 if (LDB.recipes.dataArray[i].Type == type) LDB.recipes.dataArray[i].TimeSpend = Mathf.CeilToInt(recipesProto[i].TimeSpend * multi);
                 if (LDB.recipes.dataArray[i].Type == ERecipeType.Research && type == ERecipeType.Research && LDB.recipes.dataArray[i].ID == 101) GS2.WarnJson(LDB.recipes.dataArray[i]);

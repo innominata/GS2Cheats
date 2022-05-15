@@ -116,9 +116,9 @@ namespace GalacticScaleCheats
         public static bool InternalUpdateResearch(float power, ref float speed, int[] consumeRegister, ref TechState ts, ref int techHashedThisFrame, ref long uMatrixPoint, ref long hashRegister)
         {
             if (!active || Preferences.GetFloat("labSpeed", 1f) == 1f) return true;
-            Warn("Editing " + speed);
+            // Warn("Editing " + speed);
             speed = Preferences.GetFloat("labSpeed", 1f);
-            Warn("Edited " + speed + " " + Preferences.GetFloat("labSpeed", 1f));
+            // Warn("Edited " + speed + " " + Preferences.GetFloat("labSpeed", 1f));
             return true;
         }
     }

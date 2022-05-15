@@ -21,7 +21,7 @@ namespace GalacticScaleCheats
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(Mecha), "get_droneCount")]
+        [HarmonyPatch(typeof(Mecha), "droneCount", MethodType.Getter)]
         public static bool get_droneCount(ref int __result)
         {
             if (!active || !Preferences.GetBool("fastBuild")) return true;

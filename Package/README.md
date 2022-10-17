@@ -1,5 +1,6 @@
-﻿# Galactic Scale Cheats
+Galactic Scale Cheats
 
+Version 1.1.7 Updated for GS2 2.8.2
 Version 1.1.6 Updated for GS2 2.5.12. Some saves created on earlier versions cannot be loaded with GSCheats enabled. Uncheck it in settings, then load, reenable and save (as a different file, BACKUP YOUR SAVES)
 
 This plugin adds a bunch of cheats to Galactic Scale 2.

@@ -4,14 +4,14 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "innominata"
 name = "GS2_Cheats"
-versionNumber = "1.1.6"
-description = "v1.1.6. Update for GS 2.5.12"
+versionNumber = "1.1.7"
+description = "v1.1.7. Update for GS 2.8.2"
 websiteUrl = "https://customizing.space"
 containsNsfwContent = false
 
 [package.dependencies]
 "xiaoye97-BepInEx" = "5.4.17"
-"Galactic_Scale-GalacticScale" = "2.5.12"
+"Galactic_Scale-GalacticScale" = "2.8.2"
 
 [build]
 icon = "./Package/icon.png"

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GalacticScaleCheats
 {
-    [BepInPlugin("dsp.galactic-scale.2.cheats", "Galactic Scale 2 Cheats", "1.1.5.0")]
+    [BepInPlugin("dsp.galactic-scale.2.cheats", "Galactic Scale 2 Cheats", "1.1.7.0")]
     [BepInDependency("dsp.galactic-scale.2")]
     public partial class GS2Cheats : BaseUnityPlugin, GalacticScale.iConfigurablePlugin
     {
@@ -64,7 +64,7 @@ namespace GalacticScaleCheats
         public string Name => "GS2Cheats";
         public string Author => "innominata";
         public string Description => "Some Cheats for DSP";
-        public string Version => "1.1.5.0";
+        public string Version => "1.1.7.0";
         public string GUID => "space.customizing.generators.cheats";
         public GSOptions Options => options; // Likewise for options
 

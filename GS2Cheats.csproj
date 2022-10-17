@@ -20,7 +20,7 @@
         <PackageReference Include="BepInEx.Core" Version="5.*" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
         <PackageReference Include="UnityEngine.Modules" Version="2018.4.12" IncludeAssets="compile" />
-        <PackageReference Include="DysonSphereProgram.GameLibs" Version="0.9.25.12201-r.0" IncludeAssets="compile" />
+        <PackageReference Include="DysonSphereProgram.GameLibs" Version="0.9.27.14659-r.0" IncludeAssets="compile" />
         <PackageReference Include="DysonSphereProgram.Modding.NebulaMultiplayerModApi" Version="*" IncludeAssets="compile" />
     </ItemGroup>
 
@@ -29,8 +29,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="GalacticScale, Version=2.5.12.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Users\inno\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\plugins\Galactic_Scale-GalacticScale\GalacticScale.dll</HintPath>
+      <Reference Include="GalacticScale, Version=2.8.1.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\GS\obj\Debug\net472\GalacticScale.dll</HintPath>
+      </Reference>
+      <Reference Include="GSUI, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\GS\Package\GSUI.dll</HintPath>
       </Reference>
     </ItemGroup>
 
